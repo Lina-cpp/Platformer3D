@@ -1,0 +1,12 @@
+DerivedDataCache/*
+Intermediate/*
+Platforms/*
+Saved/*
+.vs/*
+Binaries/*
+Build/*
+Intermediete/*
+.idea/*
+*.exp
+Content/StarterContent/*
+.vsconfig
