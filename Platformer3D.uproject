@@ -20,6 +20,14 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "Mutable",
+			"Enabled": true
+		},
+		{
+			"Name": "MutablePopulation",
+			"Enabled": true
 		}
 	]
 }
