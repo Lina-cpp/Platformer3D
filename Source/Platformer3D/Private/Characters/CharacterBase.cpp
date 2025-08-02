@@ -22,15 +22,16 @@ ACharacterBase::ACharacterBase()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
 		CameraComp->SetupAttachment(SpringArm);
 		CameraComp->bUsePawnControlRotation = false;
-
+	
+	//Character turn in move direction
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	
 	//Character won't turn with camera
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	//Character turn in move direction
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 100.f, 0.f);
+
 }
 
 void ACharacterBase::BeginPlay()
@@ -49,16 +50,16 @@ void ACharacterBase::Tick(float DeltaTime)
 void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	//PlayerController Ref + Input mode
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (PlayerController)
+	 PlayerControllerRef = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerControllerRef)
 		{
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->SetShowMouseCursor(false);
+			PlayerControllerRef->SetInputMode(FInputModeGameOnly());
+			PlayerControllerRef->SetShowMouseCursor(false);
 		}
 
 	//Add Mapping context
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
-		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerControllerRef->GetLocalPlayer()))
 	{
 		if (PlayerMappingContext) Subsystem->AddMappingContext(PlayerMappingContext, 0);
 	}
@@ -74,15 +75,26 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 /* Input Functions */
 void ACharacterBase::Move(const FInputActionValue &Value)
 {
-	
-	const FVector2D Direction = Value.Get<FVector2D>();
-	AddMovementInput(GetActorForwardVector() * Direction.X);
-	AddMovementInput(GetActorRightVector() * Direction.Y);
+	const FVector2D Input = Value.Get<FVector2D>();
+	if (PlayerControllerRef && Input.SizeSquared() > 0.f)
+	{
+		const FRotator ControlRotation = PlayerControllerRef->GetControlRotation();
+		const FRotator YawRotation(0, ControlRotation.Yaw, 0);
+
+		//Find Forward and Right vectors relative to the player's camera rotation
+		const FVector Forward = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector Right = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		AddMovementInput(Forward, Input.X); // X = Forward
+		AddMovementInput(Right, Input.Y);   // Y = Right
+
+		// Allows the player to rotate the character with input (WASD),
+		// and move forward in the direction the camera is looking.
+	}
 }
 
 void ACharacterBase::Look(const FInputActionValue& Value)
 {
-	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString::Printf(TEXT("Look")));
 	const FVector2D Axis = Value.Get<FVector2D>();
 	AddControllerYawInput(Axis.X);
 	AddControllerPitchInput(Axis.Y);

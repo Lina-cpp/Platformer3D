@@ -25,6 +25,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	APlayerController* PlayerControllerRef = nullptr;
+	
 /* Basic Components */
 	UPROPERTY(EditAnywhere, Category = Components)
 	USpringArmComponent* SpringArm;
