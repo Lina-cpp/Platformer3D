@@ -69,6 +69,7 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		EIC->BindAction(MoveInput, ETriggerEvent::Triggered, this, &ACharacterBase::Move);
 		EIC->BindAction(LookInput, ETriggerEvent::Triggered, this, &ACharacterBase::Look);
+		EIC->BindAction(JumpInput, ETriggerEvent::Started, this, &ACharacterBase::JumpNow);
 	}
 	
 }
@@ -98,4 +99,9 @@ void ACharacterBase::Look(const FInputActionValue& Value)
 	const FVector2D Axis = Value.Get<FVector2D>();
 	AddControllerYawInput(Axis.X);
 	AddControllerPitchInput(Axis.Y);
+}
+
+void ACharacterBase::JumpNow(const FInputActionValue& Value)
+{
+	ACharacterBase::Jump();
 }

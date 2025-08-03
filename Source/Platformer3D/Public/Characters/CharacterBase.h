@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -44,7 +45,8 @@ protected:
 	UInputAction* MoveInput;
 	UPROPERTY(EditAnywhere, Category = Inputs)
 	UInputAction* LookInput;
-
+	UPROPERTY(EditAnywhere, Category = Inputs)
+	UInputAction* JumpInput;
 
 
 
@@ -52,5 +54,6 @@ protected:
 	//Input Functions
 	void Move(const FInputActionValue &Value);
 	void Look(const FInputActionValue &Value);
+	void JumpNow(const FInputActionValue &Value);
 /* ~End of Inputs */
 };
