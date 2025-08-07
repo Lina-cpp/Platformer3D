@@ -73,6 +73,20 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 	
 }
+
+void ACharacterBase::OnHit_Implementation()
+{
+	IHitInterface::OnHit_Implementation();
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Hit");
+	Die();
+}
+
+void ACharacterBase::Die()
+{
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+}
+
 /* Input Functions */
 void ACharacterBase::Move(const FInputActionValue &Value)
 {

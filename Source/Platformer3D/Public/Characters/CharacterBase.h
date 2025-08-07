@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/HitInterface.h"
+#include "Interfaces/HitInterface.h"
+
 #include "CharacterBase.generated.h"
 
 struct FInputActionValue;
@@ -14,7 +17,7 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class PLATFORMER3D_API ACharacterBase : public ACharacter
+class PLATFORMER3D_API ACharacterBase : public ACharacter, public IHitInterface
 {
 	GENERATED_BODY()
 
@@ -23,6 +26,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Hit Interface
+	virtual void OnHit_Implementation() override;
+	void Die();
+	
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -35,6 +43,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Components)
 	UCameraComponent* CameraComp;
 /* ~End of Basic Components */
+
+	
 /* Inputs */
 	//IMC
 	UPROPERTY(EditAnywhere, Category = Inputs)
@@ -47,8 +57,6 @@ protected:
 	UInputAction* LookInput;
 	UPROPERTY(EditAnywhere, Category = Inputs)
 	UInputAction* JumpInput;
-
-
 
 
 	//Input Functions
