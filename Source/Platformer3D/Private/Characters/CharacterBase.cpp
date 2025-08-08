@@ -8,6 +8,7 @@
 #include "InputActionValue.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ACharacterBase::ACharacterBase()
@@ -83,6 +84,7 @@ void ACharacterBase::OnHit_Implementation()
 
 void ACharacterBase::Die()
 {
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 }
