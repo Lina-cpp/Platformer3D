@@ -35,6 +35,7 @@ ACharacterBase::ACharacterBase()
 
 }
 
+
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -78,16 +79,51 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ACharacterBase::OnHit_Implementation()
 {
 	IHitInterface::OnHit_Implementation();
-	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Hit");
+
+	//if character got hit - call Die()
+	//otherwise leave function
+	if (bIsDead) return;
 	Die();
 }
 
 void ACharacterBase::Die()
 {
-	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	bIsDead = true;
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
+
+	//Disable Movement but not inputs
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement()) MoveComp->DisableMovement();
+
+	//Timer to respawn
+	GetWorldTimerManager().SetTimer(RespawnTimer, this, &ACharacterBase::RespawnPlayer, 3.f, false);
 }
+
+
+void ACharacterBase::RespawnPlayer()
+{
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "RespawnPlayer");
+}
+
+
+
+
+void ACharacterBase::Respawn()
+{
+	bIsDead = false;
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	GetMesh()->SetSimulatePhysics(false);
+
+}
+
+
+
+
 
 /* Input Functions */
 void ACharacterBase::Move(const FInputActionValue &Value)

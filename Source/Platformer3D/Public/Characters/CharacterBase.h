@@ -28,7 +28,16 @@ public:
 
 	//Hit Interface
 	virtual void OnHit_Implementation() override;
+
+	bool bIsDead = false;
 	void Die();
+	UFUNCTION(Blueprintable)
+	void Respawn();
+
+
+	//Timer
+	FTimerHandle RespawnTimer;
+	void RespawnPlayer();
 	
 	
 protected:
