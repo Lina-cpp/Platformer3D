@@ -39,7 +39,8 @@ ACharacterBase::ACharacterBase()
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	MoveComp = GetCharacterMovement();
 }
 
 
@@ -96,7 +97,8 @@ void ACharacterBase::Die()
 	GetMesh()->SetSimulatePhysics(true);
 
 	//Disable Movement but not inputs
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement()) MoveComp->DisableMovement();
+	if (MoveComp) MoveComp->DisableMovement();
+	else GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("MoveComp Invalid")));
 
 	//Timer to respawn
 	GetWorldTimerManager().SetTimer(RespawnTimer, this, &ACharacterBase::RespawnPlayer, 3.f, false);
@@ -106,6 +108,7 @@ void ACharacterBase::Die()
 void ACharacterBase::RespawnPlayer()
 {
 	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "RespawnPlayer");
+	Respawn();
 }
 
 
@@ -115,10 +118,14 @@ void ACharacterBase::Respawn()
 {
 	bIsDead = false;
 
+	GetMesh()->SetSimulatePhysics(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
-	GetMesh()->SetSimulatePhysics(false);
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -89.f));
+	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
+
+	if (MoveComp) MoveComp->SetMovementMode(MOVE_Walking);
 }
 
 

@@ -6,7 +6,7 @@
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
-#include "Interfaces/HitInterface.h"
+
 
 #include "CharacterBase.generated.h"
 
@@ -39,6 +39,8 @@ public:
 	FTimerHandle RespawnTimer;
 	void RespawnPlayer();
 	
+
+	UCharacterMovementComponent* MoveComp;
 	
 protected:
 	virtual void BeginPlay() override;
