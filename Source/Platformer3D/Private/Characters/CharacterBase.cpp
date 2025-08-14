@@ -108,7 +108,7 @@ void ACharacterBase::Die()
 void ACharacterBase::RespawnPlayer()
 {
 	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "RespawnPlayer");
-	Respawn();
+	OnDeath();
 }
 
 

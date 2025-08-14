@@ -30,8 +30,12 @@ public:
 	virtual void OnHit_Implementation() override;
 
 	bool bIsDead = false;
+	UFUNCTION(BlueprintCallable)
 	void Die();
-	UFUNCTION(Blueprintable)
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
+	
+	UFUNCTION(BlueprintCallable)
 	void Respawn();
 
 
