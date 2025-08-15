@@ -29,6 +29,7 @@ public:
 	//Hit Interface
 	virtual void OnHit_Implementation() override;
 
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsDead = false;
 	UFUNCTION(BlueprintCallable)
 	void Die();
