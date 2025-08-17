@@ -73,6 +73,7 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EIC->BindAction(MoveInput, ETriggerEvent::Triggered, this, &ACharacterBase::Move);
 		EIC->BindAction(LookInput, ETriggerEvent::Triggered, this, &ACharacterBase::Look);
 		EIC->BindAction(JumpInput, ETriggerEvent::Started, this, &ACharacterBase::JumpNow);
+		EIC->BindAction(PauseInput, ETriggerEvent::Started, this, &ACharacterBase::PauseGame);
 	}
 	
 }
@@ -163,4 +164,9 @@ void ACharacterBase::Look(const FInputActionValue& Value)
 void ACharacterBase::JumpNow(const FInputActionValue& Value)
 {
 	ACharacterBase::Jump();
+}
+
+void ACharacterBase::PauseGame(const FInputActionValue& Value)
+{
+	
 }

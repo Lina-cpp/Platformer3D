@@ -75,9 +75,14 @@ protected:
 	UInputAction* JumpInput;
 
 
+	UPROPERTY(EditAnywhere, Category = Inputs)
+	UInputAction* PauseInput;
+
 	//Input Functions
 	void Move(const FInputActionValue &Value);
 	void Look(const FInputActionValue &Value);
 	void JumpNow(const FInputActionValue &Value);
+
+	void PauseGame(const FInputActionValue &Value);
 /* ~End of Inputs */
 };
