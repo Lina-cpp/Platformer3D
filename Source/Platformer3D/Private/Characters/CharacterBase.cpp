@@ -32,7 +32,7 @@ ACharacterBase::ACharacterBase()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-
+	
 }
 
 
