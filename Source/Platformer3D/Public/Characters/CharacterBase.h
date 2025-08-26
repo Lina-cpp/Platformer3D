@@ -23,6 +23,7 @@ class PLATFORMER3D_API ACharacterBase : public ACharacter, public IHitInterface
 
 public:
 	ACharacterBase();
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -39,12 +40,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Respawn();
 
-
 	//Timer
 	FTimerHandle RespawnTimer;
 	void RespawnPlayer();
 	
-
+	UPROPERTY()
 	UCharacterMovementComponent* MoveComp;
 	
 protected:
@@ -58,7 +58,25 @@ protected:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere, Category = Components)
 	UCameraComponent* CameraComp;
-/* ~End of Basic Components */
+/* Clothing Components */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Hat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Face;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Glasses;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Mustache;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Pants;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Shoes;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Tops;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* ClownNose;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* FullBody;
 
 	
 /* Inputs */

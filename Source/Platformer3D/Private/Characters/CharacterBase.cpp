@@ -23,7 +23,36 @@ ACharacterBase::ACharacterBase()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
 		CameraComp->SetupAttachment(SpringArm);
 		CameraComp->bUsePawnControlRotation = false;
+
+/* Clothing components */
+	Hat = CreateDefaultSubobject<USkeletalMeshComponent>("Hat");
+		Hat->SetupAttachment(GetMesh());
 	
+	Face = CreateDefaultSubobject<USkeletalMeshComponent>("Face");
+		Face->SetupAttachment(GetMesh());
+	
+	Glasses = CreateDefaultSubobject<USkeletalMeshComponent>("Glasses");
+		Glasses->SetupAttachment(GetMesh());
+
+	Mustache = CreateDefaultSubobject<USkeletalMeshComponent>("Mustache");
+		Mustache->SetupAttachment(GetMesh());
+
+	Pants = CreateDefaultSubobject<USkeletalMeshComponent>("Pants");
+		Pants->SetupAttachment(GetMesh());
+
+	Shoes = CreateDefaultSubobject<USkeletalMeshComponent>("Shoes");
+		Shoes->SetupAttachment(GetMesh());
+
+	Tops = CreateDefaultSubobject<USkeletalMeshComponent>("Tops");
+		Tops->SetupAttachment(GetMesh());
+
+	ClownNose = CreateDefaultSubobject<USkeletalMeshComponent>("ClownNose");
+		ClownNose->SetupAttachment(GetMesh());
+
+	FullBody = CreateDefaultSubobject<USkeletalMeshComponent>("FullBody");
+		FullBody->SetupAttachment(GetMesh());
+	
+/* Movement and Rotations */
 	//Character turn in move direction
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
@@ -33,6 +62,24 @@ ACharacterBase::ACharacterBase()
 	bUseControllerRotationRoll = false;
 
 	
+	
+}
+
+void ACharacterBase::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	
+/* Clothing components attachment */
+	Hat->SetLeaderPoseComponent(GetMesh());
+	Face ->SetLeaderPoseComponent(GetMesh());
+	Glasses->SetLeaderPoseComponent(GetMesh());
+	Pants->SetLeaderPoseComponent(GetMesh());
+	Mustache->SetLeaderPoseComponent(GetMesh());
+	Shoes->SetLeaderPoseComponent(GetMesh());
+	Tops->SetLeaderPoseComponent(GetMesh());
+	ClownNose->SetLeaderPoseComponent(GetMesh());
+	FullBody->SetLeaderPoseComponent(GetMesh());
 }
 
 
@@ -40,7 +87,9 @@ void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Save MovementComponent
 	MoveComp = GetCharacterMovement();
+
 }
 
 
