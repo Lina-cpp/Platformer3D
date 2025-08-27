@@ -83,6 +83,11 @@ void ACharacterBase::OnConstruction(const FTransform& Transform)
 }
 
 
+void ACharacterBase::SetClothing(USkeletalMesh* HatMesh)
+{
+	if(HatMesh) Hat->SetSkeletalMesh(HatMesh);
+}
+
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

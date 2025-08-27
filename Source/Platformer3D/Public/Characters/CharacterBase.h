@@ -7,7 +7,6 @@
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
 
-
 #include "CharacterBase.generated.h"
 
 struct FInputActionValue;
@@ -30,6 +29,7 @@ public:
 	//Hit Interface
 	virtual void OnHit_Implementation() override;
 
+/* Handling Death */
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsDead = false;
 	UFUNCTION(BlueprintCallable)
@@ -43,9 +43,13 @@ public:
 	//Timer
 	FTimerHandle RespawnTimer;
 	void RespawnPlayer();
+/* ~End of Handling Death */	
 	
 	UPROPERTY()
 	UCharacterMovementComponent* MoveComp;
+
+	UFUNCTION(BlueprintCallable)
+	void SetClothing(USkeletalMesh* HatMesh);
 	
 protected:
 	virtual void BeginPlay() override;
