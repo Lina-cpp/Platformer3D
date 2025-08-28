@@ -49,7 +49,7 @@ public:
 	UCharacterMovementComponent* MoveComp;
 
 	UFUNCTION(BlueprintCallable)
-	void SetClothing(USkeletalMesh* HatMesh);
+	void SetClothing(USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh);
 	
 protected:
 	virtual void BeginPlay() override;
