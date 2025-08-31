@@ -51,6 +51,8 @@ ACharacterBase::ACharacterBase()
 
 	FullBody = CreateDefaultSubobject<USkeletalMeshComponent>("FullBody");
 		FullBody->SetupAttachment(GetMesh());
+	Gloves = CreateDefaultSubobject<USkeletalMeshComponent>("Gloses");
+		Gloves->SetupAttachment(GetMesh());
 	
 /* Movement and Rotations */
 	//Character turn in move direction
@@ -80,11 +82,24 @@ void ACharacterBase::OnConstruction(const FTransform& Transform)
 	Tops->SetLeaderPoseComponent(GetMesh());
 	ClownNose->SetLeaderPoseComponent(GetMesh());
 	FullBody->SetLeaderPoseComponent(GetMesh());
+	Gloves->SetLeaderPoseComponent(GetMesh());
 }
 
 
-void ACharacterBase::SetClothing(USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh)
+void ACharacterBase::SetClothing(USkeletalMesh* FullBodyMesh, USkeletalMesh* ClownNoseMesh,
+		USkeletalMesh* TopMesh, USkeletalMesh* ShoesMesh,
+		USkeletalMesh* PantsMesh, USkeletalMesh* GlovesMesh,
+		USkeletalMesh* MustacheMesh, USkeletalMesh* GlassesMesh, 
+		USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh)
 {
+	FullBody->SetSkeletalMesh(FullBodyMesh);
+	ClownNose->SetSkeletalMesh(ClownNoseMesh);;
+	Tops->SetSkeletalMesh(TopMesh);
+	Shoes->SetSkeletalMesh(ShoesMesh);
+	Pants->SetSkeletalMesh(PantsMesh);
+	Gloves->SetSkeletalMesh(GlovesMesh);
+	Mustache->SetSkeletalMesh(MustacheMesh);
+	Glasses->SetSkeletalMesh(GlassesMesh);
 	Face->SetSkeletalMesh(FaceMesh);
 	Hat->SetSkeletalMesh(HatMesh);
 }

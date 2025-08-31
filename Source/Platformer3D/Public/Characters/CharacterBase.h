@@ -49,7 +49,11 @@ public:
 	UCharacterMovementComponent* MoveComp;
 
 	UFUNCTION(BlueprintCallable)
-	void SetClothing(USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh);
+	void SetClothing(USkeletalMesh* FullBodyMesh, USkeletalMesh* ClownNoseMesh,
+		USkeletalMesh* TopMesh, USkeletalMesh* ShoesMesh,
+		USkeletalMesh* PantsMesh, USkeletalMesh* GlovesMesh,
+		USkeletalMesh* MustacheMesh, USkeletalMesh* GlassesMesh, 
+		USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -81,6 +85,8 @@ protected:
 	USkeletalMeshComponent* ClownNose;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
 	USkeletalMeshComponent* FullBody;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
+	USkeletalMeshComponent* Gloves;
 
 	
 /* Inputs */
