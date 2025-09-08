@@ -8,7 +8,7 @@
 
 ADisappearingStone::ADisappearingStone()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 		Mesh->SetupAttachment(GetRootComponent());
@@ -18,7 +18,15 @@ ADisappearingStone::ADisappearingStone()
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ADisappearingStone::BoxCompBeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this, &ADisappearingStone::BoxCompEndOverlap);
 
-	UMaterialInstanceDynamic* DynMaterial = Mesh->CreateDynamicMaterialInstance(0, Mesh->GetMaterial(0));
+	
+}
+
+
+void ADisappearingStone::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	OpacityTimeline.TickTimeline(DeltaTime);
 }
 
 
@@ -26,13 +34,29 @@ void ADisappearingStone::BeginPlay()
 {
 	Super::BeginPlay();
 
+/* Dynamic Material setup */
+	if (Mesh && Mesh->GetMaterial(0))
+	{
+		DynMaterial = UMaterialInstanceDynamic::Create(Mesh->GetMaterial(0), this);
+		Mesh->SetMaterial(0, DynMaterial);		
+	}
+
+/* Curve and Timeline Setup */
+	if (OpacityCurve)
+	{
+		FOnTimelineFloat ProgressFunction;
+		ProgressFunction.BindUFunction(this, FName("HandleTimelineProgress"));
+
+		FOnTimelineEvent FinishedFunction;
+		FinishedFunction.BindUFunction(this, FName("HandleTimelineFinished"));
+
+		OpacityTimeline.AddInterpFloat(OpacityCurve, ProgressFunction);
+		OpacityTimeline.SetTimelineFinishedFunc(FinishedFunction);
+
+		OpacityTimeline.SetLooping(false);
+	}
 }
 
-void ADisappearingStone::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 
 /* Box Overlaps */
@@ -48,22 +72,18 @@ void ADisappearingStone::BoxCompBeginOverlap(UPrimitiveComponent* OverlappedComp
 		GetWorldTimerManager().ClearTimer(StandOnTimer); //Clear Timer, just in case
 		//Call Timer for 2 sec and then call its function
 		GetWorldTimerManager().SetTimer(StandOnTimer,this, &ADisappearingStone::PlayerOnStone, StandOnTime, false);
-		//Call function from BP
-		BeginOverlap_Implementation();
+
+		//Call Timeline to Change Opacity
+		OpacityTimeline.Stop();
+		OpacityTimeline.SetPlayRate( 1 / StandOnTime ); // To Match Opacity change to disappearing time
+		OpacityTimeline.ReverseFromEnd();
 	}
 }
 
-
-/* Timers */
 void ADisappearingStone::PlayerOnStone()
 {
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bCanStandOnRock = false;
-}
-
-void ADisappearingStone::BeginOverlap_Implementation()
-{
-	
 }
 
 
@@ -77,6 +97,13 @@ void ADisappearingStone::BoxCompEndOverlap(UPrimitiveComponent* OverlappedComp, 
 	{
 		GetWorldTimerManager().ClearTimer(StandOnTimer);
 		GetWorldTimerManager().SetTimer(DisappearTimer, this, &ADisappearingStone::StoneDisappeared, ReAppearTime, false);
+		//if player left stone before it disappeared restore full opacity
+		if (bCanStandOnRock)
+		{
+			OpacityTimeline.Stop();
+			GetWorldTimerManager().ClearTimer(DisappearTimer);
+			DynMaterial->SetScalarParameterValue("Opacity", 1.0f);
+		}
 	}
 }
 
@@ -84,13 +111,24 @@ void ADisappearingStone::StoneDisappeared()
 {
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	bCanStandOnRock = true;
-	EndOverlap_Implementation();
+	OpacityTimeline.Stop();
+	OpacityTimeline.SetPlayRate(1 / ReAppearTime);
+	OpacityTimeline.PlayFromStart();
 }
 
 
-void ADisappearingStone::EndOverlap_Implementation()
+
+
+/* Dynamic Material & Timeline */
+void ADisappearingStone::HandleTimelineProgress(float Value)
+{
+	if (DynMaterial)
+	{
+		DynMaterial->SetScalarParameterValue("Opacity", Value);
+	}
+}
+
+void ADisappearingStone::HandleTimelineFinished()
 {
 	
 }
-
-

@@ -2,14 +2,16 @@
 
 #pragma once
 
-#include <rapidjson/internal/meta.h>
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/TimelineComponent.h"
+
 #include "DisappearingStone.generated.h"
 
 class UBoxComponent;
 class ACharacterBase;
+
 
 UCLASS()
 class PLATFORMER3D_API ADisappearingStone : public AActor
@@ -19,9 +21,9 @@ class PLATFORMER3D_API ADisappearingStone : public AActor
 public:	
 	ADisappearingStone();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* BoxComp;
 
 	bool bCanStandOnRock = true;
@@ -29,20 +31,35 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-
+//Player on Stone Vars
 	FTimerHandle StandOnTimer;
 	UFUNCTION()
 	void PlayerOnStone();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StandOnTime = 2.0f;
-	
+
+//Player off Stone Vars
 	FTimerHandle DisappearTimer;
 	void StoneDisappeared();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ReAppearTime = 4.0f;
+	float ReAppearTime = 2.0f;
 
+/* Dynamic Material & Timeline */
+	UPROPERTY(BlueprintReadOnly)
+	UMaterialInstanceDynamic* DynMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timeline")
+	UCurveFloat* OpacityCurve;
+
+	FTimeline OpacityTimeline;
+
+	//Callbacks
+	UFUNCTION()
+	void HandleTimelineProgress(float Value);
+	UFUNCTION()
+	void HandleTimelineFinished();
+
+	
 /* Box Overlaps */	
 	UFUNCTION(BlueprintCallable)
 	void BoxCompBeginOverlap(UPrimitiveComponent* OverlappedComp,
@@ -58,10 +75,6 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 
-	UFUNCTION(BlueprintNativeEvent)
-	void BeginOverlap();
-	UFUNCTION(BlueprintNativeEvent)
-	void EndOverlap();
 	
 	
 	
