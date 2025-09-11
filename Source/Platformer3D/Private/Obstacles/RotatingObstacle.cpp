@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 
 #include "GameFramework/RotatingMovementComponent.h"
-
+	
 
 ARotatingObstacle::ARotatingObstacle()
 {
