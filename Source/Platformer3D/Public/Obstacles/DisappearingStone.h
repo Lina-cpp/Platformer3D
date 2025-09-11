@@ -16,7 +16,7 @@ class ACharacterBase;
 UCLASS()
 class PLATFORMER3D_API ADisappearingStone : public AActor
 {
-	GENERATED_BODY()
+	GENERATED_BODY(	)
 	
 public:	
 	ADisappearingStone();
