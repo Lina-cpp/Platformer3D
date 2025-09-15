@@ -54,6 +54,12 @@ public:
 		USkeletalMesh* PantsMesh, USkeletalMesh* GlovesMesh,
 		USkeletalMesh* MustacheMesh, USkeletalMesh* GlassesMesh, 
 		USkeletalMesh* FaceMesh, USkeletalMesh* HatMesh);
+
+	/* Basic Components */
+	UPROPERTY(EditAnywhere, Category = Components)
+	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	UCameraComponent* CameraComp;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -61,11 +67,6 @@ protected:
 	UPROPERTY()
 	APlayerController* PlayerControllerRef = nullptr;
 	
-/* Basic Components */
-	UPROPERTY(EditAnywhere, Category = Components)
-	USpringArmComponent* SpringArm;
-	UPROPERTY(EditAnywhere, Category = Components)
-	UCameraComponent* CameraComp;
 /* Clothing Components */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Cloths")
 	USkeletalMeshComponent* Hat;
